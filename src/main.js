@@ -4,13 +4,14 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 const input = document.querySelector('form input');
+let query;
 const form = document.querySelector('form');
 const loadMoreButton = document.querySelector('.load-more-button');
 let limit;
 
 form.addEventListener('submit', async evt => {
   evt.preventDefault();
-  const query = input.value;
+  query = input.value;
   const gallery = document.querySelector('ul');
   gallery.classList.add('gallery');
   gallery.innerHTML = '';
@@ -46,7 +47,6 @@ form.addEventListener('submit', async evt => {
 
 loadMoreButton.addEventListener('click', async evt => {
   evt.preventDefault();
-  const query = input.value;
   const totalPages = Math.ceil(limit / perPage);
 
   loadMoreButton.style.display = 'none';

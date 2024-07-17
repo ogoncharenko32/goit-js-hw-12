@@ -2,57 +2,40 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 export function renderImages(images) {
-  const imageFragment = document.createDocumentFragment();
-
-  images.forEach(img => {
-    const liElem = document.createElement('li');
-    liElem.classList.add('gallery-item');
-
-    const linkElem = document.createElement('a');
-    linkElem.classList.add('gallery-link');
-    linkElem.href = img.largeImageURL;
-    liElem.append(linkElem);
-
-    const imgElem = document.createElement('img');
-    imgElem.classList.add('gallery-image');
-    imgElem.src = img.webformatURL;
-    imgElem.alt = img.tags;
-    imgElem.style.width = '360px';
-    imgElem.style.height = '200px';
-
-    const infoBox = document.createElement('ul');
-    infoBox.classList.add('infobox');
-
-    const createInfoItem = (headerText, value) => {
-      const item = document.createElement('li');
-      item.classList.add('info');
-
-      const header = document.createElement('h2');
-      header.classList.add('info-header');
-      header.textContent = headerText;
-
-      const text = document.createElement('p');
-      text.classList.add('info-text');
-      text.textContent = value;
-
-      item.append(header, text);
-      return item;
-    };
-
-    infoBox.append(
-      createInfoItem('Likes', img.likes),
-      createInfoItem('Views', img.views),
-      createInfoItem('Comments', img.comments),
-      createInfoItem('Downloads', img.downloads)
-    );
-
-    linkElem.append(imgElem, infoBox);
-    imageFragment.append(liElem);
-  });
-
   const gallery = document.querySelector('ul');
   gallery.classList.add('gallery');
-  gallery.append(imageFragment);
+
+  const imageFragment = images
+    .map(img => {
+      return `
+      <li class="gallery-item">
+        <a class="gallery-link" href="${img.largeImageURL}">
+          <img class="gallery-image" src="${img.webformatURL}" alt="${img.tags}" style="width: 360px; height: 200px;" />
+          <ul class="infobox">
+            <li class="info">
+              <h2 class="info-header">Likes</h2>
+              <p class="info-text">${img.likes}</p>
+            </li>
+            <li class="info">
+              <h2 class="info-header">Views</h2>
+              <p class="info-text">${img.views}</p>
+            </li>
+            <li class="info">
+              <h2 class="info-header">Comments</h2>
+              <p class="info-text">${img.comments}</p>
+            </li>
+            <li class="info">
+              <h2 class="info-header">Downloads</h2>
+              <p class="info-text">${img.downloads}</p>
+            </li>
+          </ul>
+        </a>
+      </li>
+    `;
+    })
+    .join('');
+
+  gallery.insertAdjacentHTML('beforeend', imageFragment);
 
   const lightbox = new SimpleLightbox('.gallery .gallery-link', {
     captions: true,

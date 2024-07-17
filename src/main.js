@@ -35,9 +35,30 @@ form.addEventListener('submit', async evt => {
       loadMoreButton.style.display = 'none';
     } else {
       limit = data.totalHits;
+      const totalPages = Math.ceil(limit / perPage);
+
+      if (page > totalPages) {
+        iziToast.show({
+          message: "We're sorry, but you've reached the end of search results.",
+          messageColor: '#fff',
+          color: 'green',
+          position: 'topRight',
+          timeout: 4000,
+          iconColor: '#fff',
+          maxWidth: '432px',
+        });
+        loadMoreButton.style.display = 'none';
+      }
       renderImages(data.hits);
     }
   } catch (error) {
+    iziToast.show({
+      message: error.message,
+      messageColor: '#fff',
+      color: '#EF4040',
+      position: 'topCenter',
+      timeout: 5000,
+    });
   } finally {
     hideLoader();
   }
@@ -55,6 +76,13 @@ loadMoreButton.addEventListener('click', async evt => {
     const data = await fetchMore(query);
     renderImages(data.hits);
   } catch (error) {
+    iziToast.show({
+      message: error,
+      messageColor: '#fff',
+      color: '#EF4040',
+      position: 'topCenter',
+      timeout: 5000,
+    });
   } finally {
     hideLoader();
     if (page > totalPages) {
